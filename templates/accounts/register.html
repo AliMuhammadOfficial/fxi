@@ -1,0 +1,154 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Register {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block body_class %} bg-soft {% endblock body_class %}
+
+{% block content %}
+    <main>
+        <!-- Section -->
+        <section class="d-flex align-items-center">
+            <div class="container">
+                <div class="row justify-content-center form-bg-image">
+                    <div class="col-xs-12 col-sm-10 col-lg-6 d-flex align-items-center justify-content-center">
+                        <div class="signin-inner my-3 my-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
+                            <div class="text-center text-md-center mb-4 mt-md-0">
+                                <h1 class="mb-0 h3">
+                                    <a target="_blank" href="#">FXI</a> - Sign UP
+                                </h1>
+                                <br />
+                                <p>
+                                    {% if msg %}
+                                        {{ msg | safe }}
+                                    {% else %}
+                                        Add your credentials
+                                    {% endif %}                                     
+                                </p>    
+                            </div>
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.username }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.username.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+                                <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.first_name.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+                                <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.last_name }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.last_name.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+                                <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.email }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.email.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+
+                                 <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.password1 }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.password1.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+                                <!-- Form -->
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="material-icons">account_box</i>
+                                        </span>
+                                    </div>
+                                    {{ form.password2 }}
+                                </div>
+                                <div class="input-group">
+                                    <span class="text-error">
+                                        {{ form.password2.errors }}
+                                    </span>
+                                </div>
+                                <!-- End of Form -->
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck5">
+                                        <label class="form-check-label" for="defaultCheck5">
+                                          Agree terms
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <a href="{% url 'login' %}" class="small text-right">Login</a>
+                                    </div>
+                                </div>
+                                {% comment %} </div> {% endcomment %}
+                                <button type="submit" name="register" class="btn btn-block btn-primary">Sign in</button>
+                            </form>
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <span class="font-weight-normal">
+                                    &copy; <a  href="#" target="_blank">FXI</a> 
+                                    - coded by <a target="_blank" href="">FXI</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

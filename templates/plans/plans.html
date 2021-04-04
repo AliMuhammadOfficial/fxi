@@ -1,0 +1,69 @@
+
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+            <span class="text-uppercase page-subtitle">Dashboard</span>
+            <h3 class="page-title">Blog Overview</h3>
+        </div>
+    </div>
+  <!-- End Page Header -->
+  <!-- Small Stats Blocks -->
+    <div class="row">
+        {% for plan in context.plans %}
+            <div class="col-xs-12 col-sm-6 col-md-4 mb-4">
+                <div class="card card-small">
+                    <div class="card-header border-bottom">
+                        <h6 class="m-0">{{ plan.name }}</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-small list-group-flush">
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">Minimum Investment</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.minimum }}</span>
+                            </li>
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">Maximum Investment</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.maximum }}</span>
+                            </li>
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">ROI</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.roi }}</span>
+                            </li>
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">Period</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.roi_period }}</span>
+                            </li>
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">Plan Period</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.plan_period }}</span>
+                            </li>
+                            <li class="list-group-item d-flex px-3">
+                                <span class="text-semibold text-fiord-blue">Capital Return</span>
+                                <span class="ml-auto text-right text-semibold text-reagent-gray">{{ plan.capital_return }}</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <div class="card-footer border-top">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" class="form-control" name="amount" placeholder="Amount">
+                                </div>
+                                <div class="col text-right view-report">
+                                    <button type="submit" class="btn btn-white">Purchase</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="plan_id" value="{{plan.plan_id}}" />
+                            <input type="hidden" name="account_balance" id="account_balance" value="{{context.account.balance}}" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+  <!-- End Small Stats Blocks -->
+{% endblock content %}

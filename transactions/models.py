@@ -3,6 +3,7 @@ from django.conf import settings
 import datetime
 from django.utils import timezone
 
+
 class Transaction(models.Model):
 
     PERFECT_MONEY = 'PERFECT_MONEY'
@@ -26,14 +27,16 @@ class Transaction(models.Model):
         (FAILED, 'Failed')
     )
     trx_id = models.AutoField(primary_key=True, unique=True, null=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    post_balance = models.FloatField(null=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.PROTECT)
+    post_balance = models.DecimalField(max_digits=12, decimal_places=3)
     trx_type = models.CharField(max_length=255, choices=TRX_TYPE)
-    trx_status = models.CharField(max_length=255, choices=TRX_STATUS, default=PROCESSING)
+    trx_status = models.CharField(
+        max_length=255, choices=TRX_STATUS, default=PROCESSING)
     trx_date = models.DateField(auto_now_add=True)
     trx_time = models.TimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=255, choices=PAYMENT_CHOICES)
-    amount = models.FloatField(null=False)
+    amount = models.DecimalField(max_digits=12, decimal_places=3)
+
     def __str__(self):
         return f"TRX-{self.trx_id}"
-

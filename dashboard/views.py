@@ -139,7 +139,7 @@ def withdrawal(request):
         ).exclude(
             trx_type="DEPOSIT"
         ).order_by("-trx_id")
-        
+
         return render(
             request,
             "payments/withdrawal.html",
@@ -151,12 +151,14 @@ def withdrawal(request):
             }
         )
 
+
 @login_required(login_url="/login/")
 def admin(request):
     return render(
         request,
         "dashboard/admin.html"
     )
+
 
 @login_required(login_url="/login/")
 def page(request, page):
@@ -179,7 +181,7 @@ def page(request, page):
 
             for plan in plans:
                 plans_list.append(RoiAmount.objects.filter(plan=plan))
-            
+
             print(plans_list)
             return render(
                 request,
@@ -194,17 +196,23 @@ def page(request, page):
         else:
             print("ROI ID :", request.POST["roi-percent"])
             investments = Investment.objects.filter(status="ACTIVE")
-            roi_percent = RoiAmount.objects.get(roi_id=request.POST["roi-percent"])
+            roi_percent = RoiAmount.objects.get(
+                roi_id=request.POST["roi-percent"])
 
             for investment in investments:
                 try:
                     account = Account.objects.get(user=investment.user)
-                    plan_roi = Decimal(investment.amount) * roi_percent.percent
-                    account.balance = Decimal(account.balance) + plan_roi
-                    account.save()
-                    Earnings.objects.create(user=investment.user, earning_type="ROI", amount=plan_roi)
+                    plan_roi = float(investment.amount) * \
+                        float(roi_percent.percent)
+                    account.balance = float(account.balance) + plan_roi
+                    Earnings.objects.create(
+                        user=investment.user, earning_type="ROI", amount=plan_roi)
 
-                    print(f"Congratulations {investment.user} you just recieved ${plan_roi} ROI from {investment}")
+                    account.save()
+                    print(
+                        f"Investment Amount : {investment.amount}, Account Balance : {account.balance + plan_roi}, RPI : {plan_roi}")
+                    print(
+                        f"Congratulations {investment.user} you just recieved ${plan_roi} ROI from {investment}")
                 except Exception as e:
                     print("Exception ROI R1", e)
             return redirect(request.path)
@@ -273,7 +281,7 @@ def page(request, page):
                         Q(trx_date__lte=f"{e_year}-{e_month}-{e_day}"),
                         trx_id=trx_id
                     ).order_by('-trx_time')
-                elif trx_id and (trx_type and (not trx_type=="all") and (trx_status and (not trx_status=="all"))):
+                elif trx_id and (trx_type and (not trx_type == "all") and (trx_status and (not trx_status == "all"))):
                     transactions = Transaction.objects.filter(
                         Q(trx_date__gte=f"{s_year}-{s_month}-{s_day}"),
                         Q(trx_date__lte=f"{e_year}-{e_month}-{e_day}"),
@@ -319,7 +327,7 @@ def page(request, page):
                             Q(trx_date__lte=f"{e_year}-{e_month}-{e_day}"),
                             trx_status=trx_status.upper(),
                         ).order_by('-trx_time')
-                
+
             return render(
                 request,
                 "dashboard/transactions.html",

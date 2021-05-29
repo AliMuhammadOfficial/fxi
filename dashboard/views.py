@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from accounts.models import Account
+from accounts.models import Account, AccountUser
 from plans.models import Plan, Investment, RoiAmount
 from transactions.models import Transaction
 from accounts.models import Action
@@ -9,20 +9,53 @@ from earnings.models import Earnings
 import uuid
 import datetime
 from decimal import Decimal
+from django.utils import timezone
 
 
 @login_required(login_url="/login/")
 def dashboard(request):
     # if request.user.is_superuser:
     #     return redirect('/dashboard/admin')
+    direct_buisiness = 0
+    amb_salary = 0
+
     try:
         user_account = Account.objects.get(
             user=request.user
         )
+        account_user = AccountUser.objects.get(
+            user=request.user
+        )
+
+        directs = AccountUser.objects.filter(
+            ref_by=account_user.uid
+        )
+        for direct in directs:
+            investments = Investment.objects.filter(
+                user=direct.user, status="ACTIVE")
+            for investment in investments:
+                direct_buisiness = direct_buisiness + investment.amount
+            print("direct :  : ", direct)
+        print("Direct Buisiness : ", direct_buisiness)
+        if direct_buisiness >= 5000 and direct_buisiness < 10000:
+            amb_salary = 50
+        elif direct_buisiness >= 10000 and direct_buisiness < 25000:
+            amb_salary = 150
+        elif direct_buisiness >= 25000 and direct_buisiness < 50000:
+            amb_salary = 400
+        elif direct_buisiness > 50000:
+            amb_salary = 800
+        else:
+            amb_salary = 0
+
+        user_account.balance = user_account.balance + amb_salary
+        user_account.save()
+
     except Account.DoesNotExist:
         user_account = Account.objects.create(
             uid=uuid.uuid4(),
-            user=request.user, balance=0
+            user=request.user,
+            balance=0
         )
         user_account.save()
     plans = Plan.objects.all()
@@ -49,7 +82,7 @@ def dashboard(request):
 def deposit(request):
     if request.method == "POST":
         try:
-            deposit_amount = float(request.POST["amount"])
+            deposit_amount = Decimal(request.POST["amount"])
             account = Account.objects.get(user=request.user)
             post_balance = account.balance + deposit_amount
             account.balance = post_balance
@@ -103,7 +136,7 @@ def deposit(request):
 def withdrawal(request):
     if request.method == "POST":
         try:
-            withdraw_amount = float(request.POST["amount"])
+            withdraw_amount = Decimal(request.POST["amount"])
             account = Account.objects.get(user=request.user)
             post_balance = account.balance - withdraw_amount
             account.balance = post_balance
@@ -161,6 +194,59 @@ def admin(request):
 
 
 @login_required(login_url="/login/")
+def edit_plan(request, plan_id):
+    if request.method == "GET":
+        print("PLAN_ID : ", plan_id)
+        plan = Plan.objects.get(plan_id=plan_id)
+        print("Plan : ", plan)
+        return render(
+            request, "plans/edit.html",
+            {
+                "context": {
+                    "plan": plan
+                }
+            }
+        )
+    else:
+        plan_id = request.POST["plan_id"]
+        name = request.POST["name"]
+        minimum = request.POST["minimum"]
+        maximum = request.POST["maximum"]
+        roi = request.POST["roi"]
+        period = request.POST["roi_period"]
+        plan_period = request.POST["plan_period"]
+        capital_return = request.POST.get("capital_return", False)
+
+        print(f"""
+              {name}
+              {minimum}
+              {maximum}
+              {roi}
+              {period}
+              {plan_period}
+              {capital_return}
+              """)
+
+        print("Plan Id : ", plan_id)
+        if capital_return:
+            capital_return = True
+        try:
+            plan = Plan.objects.get(plan_id=plan_id)
+            plan.name = name
+            plan.minimum = minimum
+            plan.maximum = maximum
+            plan.roi = roi
+            plan.plan_period = plan_period
+            plan.capital_return = capital_return
+            plan.save()
+            print("Plan Edited and saved.")
+
+        except Plan.DoesNotExist:
+            print("Plan Does Not Exist")
+        return redirect(to="/dashboard/admin/plans")
+
+
+@login_required(login_url="/login/")
 def page(request, page):
     page = page.lower()
     if page == "deposits":
@@ -195,26 +281,47 @@ def page(request, page):
             )
         else:
             print("ROI ID :", request.POST["roi-percent"])
-            investments = Investment.objects.filter(status="ACTIVE")
-            roi_percent = RoiAmount.objects.get(
-                roi_id=request.POST["roi-percent"])
+
+            today = timezone.now()
+            plan = Plan.objects.get(plan_id=request.POST["plan_id"])
+            print("Plan : ", plan)
+
+            investments = Investment.objects.filter(plan=plan, status="ACTIVE")
 
             for investment in investments:
-                try:
-                    account = Account.objects.get(user=investment.user)
-                    plan_roi = float(investment.amount) * \
-                        float(roi_percent.percent)
-                    account.balance = float(account.balance) + plan_roi
-                    Earnings.objects.create(
-                        user=investment.user, earning_type="ROI", amount=plan_roi)
+                # print("Date Created : ",
+                #       investment.created_at.strftime('%Y-%m-%d|'))
+                # print("Yesterday Date : ", yesterday.strftime('%Y-%m-%d|'))
+                if investment.period == "DAILY":
+                    yesterday = today - datetime.timedelta(days=1)
+                    if investment.created_at.strftime('%Y-%m-%d|') <= yesterday.strftime('%Y-%m-%d|'):
+                        roi_percent = RoiAmount.objects.get(
+                            roi_id=request.POST["roi-percent"])
+                        account = Account.objects.get(user=investment.user)
+                        plan_roi = float(investment.amount) * \
+                            float(roi_percent.percent)
+                        account.balance = float(account.balance) + plan_roi
+                        Earnings.objects.create(
+                            user=investment.user, earning_type="ROI", amount=plan_roi)
+                        print("Time : ", investment.created_time)
+                        account.save()
+                        print(f"Investment Plan : {investment} is mature.")
+                else:
+                    yesterday = today - datetime.timedelta(days=2)
+                    if investment.created_at.strftime('%Y-%m-%d|') <= yesterday.strftime('%Y-%m-%d|'):
+                        roi_percent = RoiAmount.objects.get(
+                            roi_id=request.POST["roi-percent"])
+                        print(f"Investment Plan : {investment} is mature.")
+                        account = Account.objects.get(user=investment.user)
+                        plan_roi = float(investment.amount) * \
+                            float(roi_percent.percent)
+                        account.balance = float(account.balance) + plan_roi
+                        Earnings.objects.create(
+                            user=investment.user, earning_type="ROI", amount=plan_roi)
+                        print("Time : ", investment.created_time)
+                        account.save()
+                        print(f"Investment Plan : {investment} is mature.")
 
-                    account.save()
-                    print(
-                        f"Investment Amount : {investment.amount}, Account Balance : {account.balance + plan_roi}, RPI : {plan_roi}")
-                    print(
-                        f"Congratulations {investment.user} you just recieved ${plan_roi} ROI from {investment}")
-                except Exception as e:
-                    print("Exception ROI R1", e)
             return redirect(request.path)
     elif page == "plans":
         if request.method == "POST":
@@ -263,6 +370,7 @@ def page(request, page):
                     }
                 }
             )
+
     elif page == "transactions":
         if request.method == "POST":
             start = request.POST["start"]
@@ -327,6 +435,11 @@ def page(request, page):
                             Q(trx_date__lte=f"{e_year}-{e_month}-{e_day}"),
                             trx_status=trx_status.upper(),
                         ).order_by('-trx_time')
+                else:
+                    transactions = Transaction.objects.filter(
+                        Q(trx_date__gte=f"{s_year}-{s_month}-{s_day}"),
+                        Q(trx_date__lte=f"{e_year}-{e_month}-{e_day}"),
+                    ).order_by('-trx_time')
 
             return render(
                 request,
@@ -340,25 +453,43 @@ def page(request, page):
                             "trx_id": trx_id,
                             "trx_type": trx_type.capitalize(),
                             "trx_status": trx_status.capitalize()
-                        }
+                        },
+                        "statuses": ["PROCESSING", "COMPLETED", "FAILED"]
                     }
                 }
             )
 
-            return redirect(request.path)
+            return redirect(
+                request.path
+            )
         else:
-            transactions = Transaction.objects.all().order_by('-trx_time')
+            # transactions = Transaction.objects.all().order_by('-trx_time')
+            s_year = timezone.now().strftime("%Y")
+            s_month = timezone.now().strftime("%m")
+            s_day = timezone.now().strftime("%d")
+
+            transactions = Transaction.objects.filter(
+                Q(trx_date__gte=f"{s_year}-{s_month}-{1}"),
+                Q(trx_date__lte=f"{s_year}-{s_month}-{s_day}"),
+            ).order_by('-trx_time')
             return render(
                 request,
                 "dashboard/transactions.html",
                 {
                     "context": {
                         "transactions": transactions,
+                        "statuses": ["PROCESSING", "COMPLETED", "FAILED"]
                     }
                 }
             )
     elif page == "users":
+        users = AccountUser.objects.all()
         return render(
             request,
-            "dashboard/users.html"
+            "dashboard/users.html",
+            {
+                "context": {
+                    "users": users
+                }
+            }
         )

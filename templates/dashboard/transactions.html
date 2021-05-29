@@ -1,77 +1,82 @@
-
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-  <div class="page-header row no-gutters py-4">
-    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-      <span class="text-uppercase page-subtitle">Dashboard &gt; Admin &gt; Transactions</span>
-      <h3 class="page-title">Blog Overview</h3>
-    </div>
+<div class="page-header row no-gutters py-4">
+  <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+    <span class="text-uppercase page-subtitle">Dashboard &gt; Admin &gt; Transactions</span>
+    <h3 class="page-title">Blog Overview</h3>
   </div>
-  <!-- End Page Header -->
-  <!-- Small Stats Blocks -->
-  <div class="row">
-    <div class="col">
-      <div class="card card-small mb-4">
-        <div class="card-header border-bottom">
-          <h6 class="m-0">Transaction History</h6>
-        </div>
-        <div class="card-body text-center">
-          <form method="POST">
-            {% csrf_token %}
-            <div class="row border-bottom py-2 bg-light">
-              <div class="form-group col-sm-3 col-xs-12 mt-sm-2 mt-lg-0">
-                <div id="blog-overview-date-range" class="input-daterange input-group input-group-sm my-auto ml-auto mr-auto ml-sm-auto mr-sm-0">
-                  <input type="text" class="input-sm form-control" name="start" autocomplete="off" placeholder="Start Date" id="start" {% if context.filters.start %} value="{{ context.filters.start }}" {% endif %}>
-                  <input type="text" class="input-sm form-control" name="end" autocomplete="off" placeholder="End Date" id="end" {% if context.filters.end %} value="{{ context.filters.end }}" {% endif %}>
-                  <span class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="material-icons"></i>
-                    </span>
+</div>
+<!-- End Page Header -->
+<!-- Small Stats Blocks -->
+<div class="row">
+  <div class="col">
+    <div class="card card-small mb-4">
+      <div class="card-header border-bottom">
+        <h6 class="m-0">Transaction History</h6>
+      </div>
+      <div class="card-body text-center">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row border-bottom py-2 bg-light">
+            <div class="form-group col-sm-3 col-xs-12 mt-sm-2 mt-lg-0">
+              <div id="blog-overview-date-range"
+                class="input-daterange input-group input-group-sm my-auto ml-auto mr-auto ml-sm-auto mr-sm-0">
+                <input type="text" class="input-sm form-control" name="start" autocomplete="off"
+                  placeholder="Start Date" id="start" {% if context.filters.start %} value="{{ context.filters.start }}"
+                  {% endif %}>
+                <input type="text" class="input-sm form-control" name="end" autocomplete="off" placeholder="End Date"
+                  id="end" {% if context.filters.end %} value="{{ context.filters.end }}" {% endif %}>
+                <span class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="material-icons"></i>
                   </span>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-sm-3 col-xs-12 mt-sm-2 mt-lg-0">
+              <input type="text" class="form-control form-control-sm temp-class again-just-for line-breacking"
+                name="trx-id" placeholder="Transaction ID" {% if context.filters.trx_id %}
+                value="{{ context.filters.trx_id }}" {% endif %}>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <select id="trx-type" name="trx-type" class="form-control form-control-sm">
+                    {% if context.filters.trx_type %}
+                    <option selected value="{{ context.filters.trx_type  }}">{{ context.filters.trx_type }}</option>
+                    {% else %}
+                    <option selected value="">Type</option>
+                    {% endif %}
+                    <option value="Deposit">Deposit</option>
+                    <option value="Withdraw">Withdrawals</option>
+                    <option value="All">All</option>
+                  </select>
                 </div>
-              </div>
-              <div class="form-group col-sm-3 col-xs-12 mt-sm-2 mt-lg-0">
-                <input class="form-control form-control-sm" name="trx-id" placeholder="Transaction ID" {% if context.filters.trx_id %} value="{{ context.filters.trx_id }}" {% endif %}>
-              </div>
-              <div class="col-sm-6 col-xs-12">
-                <div class="row">
-                  <div class="form-group col-md-3">
-                    <select id="trx-type" name="trx-type" class="form-control form-control-sm">
-                      {% if context.filters.trx_type %}
-                        <option selected value="{{ context.filters.trx_type  }}">{{ context.filters.trx_type }}</option>
-                      {% else %}
-                        <option selected value="">Type</option>
-                      {% endif %}
-                      <option value="Deposit">Deposit</option>
-                      <option value="Withdraw">Withdrawals</option>
-                      <option value="All">All</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <select id="trx-status" name="trx-status" class="form-control form-control-sm">
+                <div class="form-group col-md-3">
+                  <select id="trx-status" name="trx-status" class="form-control form-control-sm">
                     {% if context.filters.trx_status %}
-                        <option selected value="{{ context.filters.trx_status  }}">{{ context.filters.trx_status }}</option>
-                      {% else %}
-                        <option selected value="">Status</option>
-                      {% endif %}
-                      <option value="Processing">Processing</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Failed">Failed</option>
-                      <option value="All">All</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-4">
-                    <button type="submit" class="btn btn-white">Filter</button>
-                  </div>
+                    <option selected value="{{ context.filters.trx_status  }}">{{ context.filters.trx_status }}</option>
+                    {% else %}
+                    <option selected value="">Status</option>
+                    {% endif %}
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Failed">Failed</option>
+                    <option value="All">All</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-4">
+                  <button type="submit" class="btn btn-white">Filter</button>
                 </div>
               </div>
             </div>
-          </form>
-          <div style="overflow-x: scroll;">
-            <table class="table mb-0">
-              <thead class="bg-light">
-                <tr>
+          </div>
+        </form>
+        <div style="overflow-x: scroll;">
+          <table class="table mb-0">
+            <thead class="bg-light">
+              <tr>
                 <th scope="col" class="border-0">#</th>
                 <th scope="col" class="border-0">Transaction ID</th>
                 <th scope="col" class="border-0">User</th>
@@ -80,44 +85,47 @@
                 <th scope="col" class="border-0">Payment Method</th>
                 <th scope="col" class="border-0">Status</th>
                 <th scope="col" class="border-0">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for transaction in context.transactions %}
-                  <tr>
-                    <td>{{ transaction.trx_id }}</td>
-                    <td>{{ transaction.trx_id }}</td>
-                    <td>{{ transaction.user }}</td>
-                    <td>{{ transaction.amount }}</td>
-                    <td>{{ transaction.trx_type }}</td>
-                    <td>{{ transaction.payment_method }}</td>
-                    <td>{{ transaction.trx_status }}</td>
-                    <td>{{ transaction.trx_date }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+                <th scope="col" class="border-0">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for transaction in context.transactions %}
+              <tr>
+                <td>{{ transaction.trx_id }}</td>
+                <td>{{ transaction.trx_id }}</td>
+                <td>{{ transaction.user }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.trx_type }}</td>
+                <td>{{ transaction.payment_method }}</td>
+                <td>{{ transaction.trx_status }}</td>
+
+                <td>{{ transaction.trx_date }}</td>
+                <td><a href="{% url 'edittransaction' transaction.trx_id %}" class="btn btn-white">Edit</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
+</div>
 {% endblock content %}
 {% block scripts %}
-  <script type="text/javascript">
-    function setDefaultDates() {
-      var start = document.getElementById("start")
-      var end = document.getElementById("end")
+<script type="text/javascript">
+  function setDefaultDates() {
+    var start = document.getElementById("start")
+    var end = document.getElementById("end")
 
-      dt = new Date()
-      console.log(dt.getFullYear())
-      if (start.value=="" && end.value==""){
-        start.value = `${dt.getMonth()+1}/01/${dt.getFullYear()}`
-        end.value = `${dt.getMonth()+1}/${dt.getDate()}/${dt.getFullYear()}`
-      }
-
+    dt = new Date()
+    console.log(dt.getFullYear())
+    if (start.value == "" && end.value == "") {
+      start.value = `${dt.getMonth() + 1}/01/${dt.getFullYear()}`
+      end.value = `${dt.getMonth() + 1}/${dt.getDate()}/${dt.getFullYear()}`
     }
 
-    setDefaultDates()
-  </script>
+  }
+
+  setDefaultDates()
+</script>
 {% endblock scripts %}

@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import AccountUser, Account, Action
 from plans.models import Plan, Investment
 from earnings.models import Earnings
+from decimal import Decimal
 
 
 @login_required(login_url="/login/")
-def  plans(request):
+def plans(request):
     if request.method == "GET":
         account = Account.objects.get(
             user=request.user
@@ -27,7 +28,7 @@ def  plans(request):
         investment_amount = float(
             request.POST.get("amount", 0)
         )
-        try: # Checked
+        try:  # Checked
             account = Account.objects.get(
                 user=request.user
             )
@@ -37,10 +38,11 @@ def  plans(request):
                 ):
                     try:
                         plan = Plan.objects.get(
-                        plan_id=plan_id
-                    )
+                            plan_id=plan_id
+                        )
                         if (investment_amount >= plan.minimum) and (investment_amount <= plan.maximum):
-                            account.balance = account.balance - float(investment_amount)
+                            account.balance = account.balance - \
+                                Decimal(investment_amount)
                             account.save()
                             investment = Investment(
                                 user=request.user,
@@ -65,7 +67,7 @@ def  plans(request):
                                         user=level_one_user.user
                                     )
                                     level_one_account.balance = level_one_account.balance + \
-                                        (investment_amount * 0.05)
+                                        Decimal((investment_amount * 0.05))
                                     level_one_account.save()
                                     Earnings.objects.create(
                                         user=level_one_user.user,
@@ -82,7 +84,7 @@ def  plans(request):
                                         level_two_account = Account.objects.get(
                                             user=level_two_user.user
                                         )
-                                        level_two_account.balance = level_two_account.balance + \
+                                        level_two_account.balance = float(level_two_account.balance) + \
                                             (investment_amount * 0.03)
                                         level_two_account.save()
                                         Earnings.objects.create(
@@ -105,12 +107,13 @@ def  plans(request):
                                             level_three_account.save()
                                             Earnings.objects.create(
                                                 user=level_three_user.user,
-                                                amount=(investment_amount * 0.01),
+                                                amount=(
+                                                    investment_amount * 0.01),
                                                 earning_type="REFERRAL_BONUS"
                                             )
                                         except Exception as e:
                                             print("Exception ID P6", e)
-                                        try: 
+                                        try:
                                             level_four_user = AccountUser.objects.get(
                                                 uid=level_three_user.ref_by
                                             )
@@ -123,7 +126,8 @@ def  plans(request):
                                                 level_four_account.save()
                                                 Earnings.objects.create(
                                                     user=level_four_user.user,
-                                                    amount=(investment_amount * 0.01),
+                                                    amount=(
+                                                        investment_amount * 0.01),
                                                     earning_type="REFERRAL_BONUS"
                                                 )
                                             except Exception as e:
@@ -141,7 +145,8 @@ def  plans(request):
                                                     level_five_account.save()
                                                     Earnings.objects.create(
                                                         user=level_five_user.user,
-                                                        amount=(investment_amount * 0.01),
+                                                        amount=(
+                                                            investment_amount * 0.01),
                                                         earning_type="REFERRAL_BONUS"
                                                     )
                                                     print(f"""
@@ -150,9 +155,10 @@ def  plans(request):
                                                         {level_three_user},
                                                         {level_four_user},
                                                         {level_five_user}"""
-                                                    )
+                                                          )
                                                 except Exception as e:
-                                                    print("Exception ID P_10", e)
+                                                    print(
+                                                        "Exception ID P_10", e)
                                             except Exception as e:
                                                 print("Exception ID P5", e)
                                         except Exception as e:
@@ -162,24 +168,24 @@ def  plans(request):
                                 except Exception as e:
                                     print("Exception ID P2", e)
                             except Exception as e:
-                                print(f"Exception ID P_1", e) 
-                        else: #Checked
-                            # THROW ERROR MESSAGE : 
+                                print(f"Exception ID P_1", e)
+                        else:  # Checked
+                            # THROW ERROR MESSAGE :
                             # invalid amoutn to purchase plan
                             msg = f"To purchase this plan you must \
                                 invest between {plan.minimum} - {plan.maximum}"
                             print(msg)
-                    except Plan.DoesNotExist: # Checked
+                    except Plan.DoesNotExist:  # Checked
                         msg = f"Error P4 | Plan with {plan_id} does not exist"
                         print(msg)
                 else:
                     msg = "Insuficient Balance"
                     print(msg)
-            except Exception as e: 
+            except Exception as e:
                 msg = "Error P3 | Invalid amount! please enter \
                     valid amoutn to purchase the plan!"
-                print(msg, e) # Investment Amount Value Error
-        except Account.DoesNotExist: # Checked
+                print(msg, e)  # Investment Amount Value Error
+        except Account.DoesNotExist:  # Checked
             msg = f"Error P2 | Account for {request.user} does not exist"
             print(msg)
         except Exception as e:
@@ -214,15 +220,15 @@ def active(request):
         investment = Investment.objects.get(
             user=request.user,
             investment_id=investment_id,
-            status="ACTIVE"
+            status="ACTIVE",
         )
-        capital = investment.amount * (investment.return_capital / 100)
-        
-        investment.status = "INACTIVE"
-        investment.save()
-        account.balance = float(account.balance) + float(capital)
-        account.save()
-        
+        if investment.plan.capital_return:
+            capital = float(investment.amount) * \
+                (investment.return_capital / 100)
+            investment.status = "INACTIVE"
+            investment.save()
+            account.balance = float(account.balance) + float(capital)
+            account.save()
+
         print("Invest ID: ", request.POST['investment_id'])
         return redirect(request.path)
-

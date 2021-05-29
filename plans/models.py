@@ -75,6 +75,7 @@ class Investment(models.Model):
     status = models.CharField(
         max_length=30, choices=STATUS_CHOICE, default=INACTIVE)
     return_capital = models.FloatField()
+    created_time = models.TimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=False, auto_now=True)
 

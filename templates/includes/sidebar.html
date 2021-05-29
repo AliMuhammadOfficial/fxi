@@ -1,178 +1,181 @@
 {% load static %}
 {% if request.user.is_superuser %}
-  <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
-    <div class="main-navbar">
-      <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-        <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
-          <div class="d-table m-auto">
-            <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;" src="{% static 'assets/images/shards-dashboards-logo.svg' %}" alt="Shards Dashboard">
-            <span class="d-none d-md-inline ml-1">FXI</span>
-          </div>
-        </a>
-        <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
-          <i class="material-icons">&#xE5C4;</i>
-        </a>
-      </nav>
-    </div>
-    {% comment %} <form action="#" class="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none">
-      <div class="input-group input-group-seamless ml-3">
-        <div class="input-group-prepend">
-          <div class="input-group-text">
-            <i class="fas fa-search"></i>
-          </div>
+<aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+  <div class="main-navbar">
+    <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
+      <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+        <div class="d-table m-auto">
+          <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;"
+            src="{% static 'assets/images/shards-dashboards-logo.svg' %}" alt="Shards Dashboard">
+          <span class="d-none d-md-inline ml-1">FXI</span>
         </div>
-        <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search"> </div>
-    </form> {% endcomment %}
-    <div class="nav-wrapper">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'admin' %}">
-            <i class="material-icons">space_dashboard</i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
-            <i class="material-icons">payments</i>
-            <span>Payments</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start" style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
-            <a class="dropdown-item " href="{% url 'page' 'deposits' %}">Deposit</a>
-            <a class="dropdown-item " href="{% url 'page' 'withdrawals' %}">Withdrawal</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'page' 'roi' %}">
-            <i class="material-icons">receipt</i>
-            <span>Release ROI</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'page' 'plans' %}">
-            <i class="material-icons">receipt</i>
-            <span>Manage Plans</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'page' 'transactions' %}">
-            <i class="material-icons">receipt</i>
-            <span>Transaction History</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'page' 'users' %}">
-            <i class="material-icons">receipt</i>
-            <span>Users</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'account' %}">
-            <i class="material-icons">person</i>
-            <span>User Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="errors.html">
-            <i class="material-icons">error</i>
-            <span>Errors</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
-            <i class="material-icons">attach_money</i>
-            <span>Settings</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start" style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
-            <a class="dropdown-item " href="">General</a>
-            <a class="dropdown-item " href="">Payment Methods</a>
-          </div>
-        </li>
-      </ul>
+      </a>
+      <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
+        <i class="material-icons">&#xE5C4;</i>
+      </a>
+    </nav>
+  </div>
+  {% comment %} <form action="#" class="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none">
+    <div class="input-group input-group-seamless ml-3">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <i class="fas fa-search"></i>
+        </div>
+      </div>
+      <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search">
     </div>
-  </aside>
+  </form> {% endcomment %}
+  <div class="nav-wrapper">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'admin' %}">
+          <i class="material-icons">space_dashboard</i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+          <i class="material-icons">payments</i>
+          <span>Earnings</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start"
+          style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
+          <a class="dropdown-item " href="{% url 'page' 'roi' %}">Release ROI</a>
+          <a class="dropdown-item " href="{% url 'page' 'withdrawals' %}">Ambassador Salary</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'page' 'plans' %}">
+          <i class="material-icons">receipt</i>
+          <span>Manage Plans</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'page' 'transactions' %}">
+          <i class="material-icons">receipt</i>
+          <span>Transaction History</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'page' 'users' %}">
+          <i class="material-icons">receipt</i>
+          <span>Users</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'account' %}">
+          <i class="material-icons">person</i>
+          <span>User Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="errors.html">
+          <i class="material-icons">error</i>
+          <span>Errors</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+          <i class="material-icons">attach_money</i>
+          <span>Settings</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start"
+          style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
+          <a class="dropdown-item " href="">General</a>
+          <a class="dropdown-item " href="">Payment Methods</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</aside>
 {% else %}
 <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
-    <div class="main-navbar">
-      <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-        <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
-          <div class="d-table m-auto">
-            <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;" src="{% static 'assets/images/shards-dashboards-logo.svg' %}" alt="Shards Dashboard">
-            <span class="d-none d-md-inline ml-1">FXI</span>
-          </div>
-        </a>
-        <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
-          <i class="material-icons">&#xE5C4;</i>
-        </a>
-      </nav>
-    </div>
-    {% comment %} <form action="#" class="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none">
-      <div class="input-group input-group-seamless ml-3">
-        <div class="input-group-prepend">
-          <div class="input-group-text">
-            <i class="fas fa-search"></i>
-          </div>
+  <div class="main-navbar">
+    <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
+      <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+        <div class="d-table m-auto">
+          <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;"
+            src="{% static 'assets/images/shards-dashboards-logo.svg' %}" alt="Shards Dashboard">
+          <span class="d-none d-md-inline ml-1">FXI</span>
         </div>
-        <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search"> </div>
-    </form> {% endcomment %}
-    <div class="nav-wrapper">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'dashboard' %}">
-            <i class="material-icons">space_dashboard</i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
-            <i class="material-icons">payments</i>
-            <span>Payments</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start" style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
-            <a class="dropdown-item " href="{% url 'deposit' %}">Deposit</a>
-            <a class="dropdown-item " href="{% url 'withdrawal' %}">Withdrawal</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'transactions' %}">
-            <i class="material-icons">receipt</i>
-            <span>Transaction History</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
-            <i class="material-icons">attach_money</i>
-            <span>Investment Plans</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start" style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
-            <a class="dropdown-item " href="{% url 'plans' %}">Purchase</a>
-            <a class="dropdown-item " href="{% url 'active' %}">Active</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'team' %}">
-            <i class="material-icons">groups</i>
-            <span>Teams</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="tables.html">
-            <i class="material-icons">request_quote</i>
-            <span>Earnings</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="{% url 'account' %}">
-            <i class="material-icons">person</i>
-            <span>User Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="errors.html">
-            <i class="material-icons">error</i>
-            <span>Errors</span>
-          </a>
-        </li>
-      </ul>
+      </a>
+      <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
+        <i class="material-icons">&#xE5C4;</i>
+      </a>
+    </nav>
+  </div>
+  {% comment %} <form action="#" class="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none">
+    <div class="input-group input-group-seamless ml-3">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <i class="fas fa-search"></i>
+        </div>
+      </div>
+      <input class="navbar-search form-control" type="text" placeholder="Search for something..." aria-label="Search">
     </div>
-  </aside>
+  </form> {% endcomment %}
+  <div class="nav-wrapper">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'dashboard' %}">
+          <i class="material-icons">space_dashboard</i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+          <i class="material-icons">payments</i>
+          <span>Payments</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start"
+          style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
+          <a class="dropdown-item " href="{% url 'deposit' %}">Deposit</a>
+          <a class="dropdown-item " href="{% url 'withdrawal' %}">Withdrawal</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'transactions' %}">
+          <i class="material-icons">receipt</i>
+          <span>Transaction History</span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+          <i class="material-icons">attach_money</i>
+          <span>Investment Plans</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-small" x-placement="bottom-start"
+          style="display: none; position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-5px, 50px, 0px);">
+          <a class="dropdown-item " href="{% url 'plans' %}">Purchase</a>
+          <a class="dropdown-item " href="{% url 'active' %}">Active</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'team' %}">
+          <i class="material-icons">groups</i>
+          <span>Teams</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="tables.html">
+          <i class="material-icons">request_quote</i>
+          <span>Earnings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'account' %}">
+          <i class="material-icons">person</i>
+          <span>User Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="errors.html">
+          <i class="material-icons">error</i>
+          <span>Errors</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
 {% endif %}

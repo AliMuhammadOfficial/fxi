@@ -1,0 +1,60 @@
+{% extends 'layouts/base.html' %}
+<!-- End Main Sidebar -->
+{% block content %}
+<div class="alert alert-success alert-dismissible fade show mb-0 mt-2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    <i class="fa fa-check mx-2"></i>
+    <strong>Success!</strong> Your profile has been updated!
+</div>
+<!-- Page Header -->
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Overview</span>
+        <h3 class="page-title">User Profile</h3>
+    </div>
+</div>
+<!-- End Page Header -->
+<!-- Default Light Table -->
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-xs-12 col-sm-10">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Account Details</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <div class="row">
+                        <div class="col">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <select id="trx-status" name="trx-status" class="form-control form-control-sm">
+                                            {% for status in context.statuses %}
+
+                                            {% if context.transaction.trx_status == status %}
+                                            <option value="{{status}}" selected>{{status}}</option>
+                                            {% endif %}
+
+                                            <option value="{{status}}">{{status}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="hidden" name="trx_id" value="{{ context.transaction.trx_id }}">
+                                        <button type="submit" class="btn btn-accent btn-block">Update Status</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Default Light Table -->
+{% endblock content %}

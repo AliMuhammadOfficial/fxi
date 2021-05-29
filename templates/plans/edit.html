@@ -1,0 +1,89 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-header row no-gutters py-4">
+    <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Dashboard</span>
+        <h3 class="page-title">Blog Overview</h3>
+    </div>
+</div>
+<!-- End Page Header -->
+<!-- Small Stats Blocks -->
+<div class="row">
+    <div class="col-xs-12 col-sm-1 mb-4"></div>
+    <div class="col-xs-12 col-sm-10 mb-4">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="card card-small">
+                <div class="card-header border-bottom">
+                    <input type="text" class="form-control" name="name" value="{{ context.plan.name }}">
+                    {% comment %} <h6 class="m-0">{{ context.plan.name }}</h6> {% endcomment %}
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-small list-group-flush">
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">Minimum Investment</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                                <input type="text" class="form-control" name="minimum" value="{{ context.plan.minimum }}">
+                                {% comment %} {{ context.plan.minimum }} {% endcomment %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">Maximum Investment</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                                <input type="text" class="form-control" name="maximum" value="{{ context.plan.maximum }}">
+                                {% comment %} {{ context.plan.maximum }} {% endcomment %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">ROI</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                                <input type="text" class="form-control" name="roi" value="{{ context.plan.roi }}">
+                                {% comment %} {{ context.plan.roi }} {% endcomment %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">Period</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                                <input type="text" class="form-control" name="roi_period" value="{{ context.plan.roi_period }}">
+                                {% comment %} {{ context.plan.roi_period }} {% endcomment %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">Plan Period</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                                <input type="text" class="form-control" name="plan_period" value="{{ context.plan.plan_period }}">
+                                {% comment %} {{ context.plan.plan_period }} {% endcomment %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex px-3">
+                            <span class="text-semibold text-fiord-blue">Capital Return</span>
+                            <span class="ml-auto text-right text-semibold text-reagent-gray">
+                            <fieldset>
+                                {% comment %} <strong class="text-muted d-block mb-2">Toggle Switches</strong> {% endcomment %}
+                                <div class="custom-control custom-toggle custom-toggle-sm mb-1">
+                                    <input type="checkbox" id="capital" name="capital_return" class="custom-control-input" {% if context.plan.capital_return %}checked{% endif %}>
+                                    <label class="custom-control-label" for="capital">Capital Return</label>
+                                </div>
+                            </fieldset>
+                                {% comment %} <input type="checkbox" name="capital_return" {% if context.plan.capital_return %}checked{% endif %} > {% endcomment %}
+                                {% comment %} {{ context.plan.capital_return }} {% endcomment %}
+                            </span>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="card-footer border-top">
+                    <div class="row">
+                        <div class="col text-right view-report">
+                            <button type="submit" class="btn btn-white">Save</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="plan_id" value="{{context.plan.plan_id}}" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- End Small Stats Blocks -->
+{% endblock content %}
